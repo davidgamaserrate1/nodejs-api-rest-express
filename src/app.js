@@ -4,22 +4,56 @@ const app = express();
 
 app.use(express.json())
 
-const books = [
-  {id: 1, "title": "Celan Code"},
-  {id: 2, "titulo": "The Last Of Us"}
+const books = 
+[
+  {
+    id: 1,
+    "title": "Clean Code"
+    },
+  {
+    id: 2, 
+    "title": "The Last Of Us"
+  },
 ]
 
-app.get('/', (req, res) => {
+app.get('/', ( req, res) => {
   res.status(200).send('Node Course');
 }) 
 
 app.get('/books', (req, res) => {
   res.status(200).json(books)
 })
- 
 
-function buscaLivro(id) {
-  return livros.findIndex(livro => livro.id == id)
+app.get('/books/:id',(req,res) =>{
+    let index = getBook(req.params.id);   
+
+    res.json(books[index])
+
+})
+
+ 
+app.post('/books', (req,res) => {
+  books.push(req.body);
+  res.status(201).send('Book Registred!');
+})
+
+app.put('/books/:id',(req,res) =>{
+    let index = getBook(req.params.id);
+    books[index].title = req.body.title;
+    res.status(200).send(books)
+})
+
+app.delete('/books/:id',(req,res) =>{
+    let {id} = req.params;
+    let index = getBook(id);
+    books.splice(index,1)
+    res.status(200).send(`Book ${id} removed with sucess!`)
+})
+
+
+function getBook(id) {
+    return books.findIndex(livro => livro.id ==id );
 }
+
 
 export default app
